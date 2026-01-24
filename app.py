@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from bokeh.plotting import figure
+from streamlit_bokeh import streamlit_bokeh
 
 # -------------------------------
 # Page config
@@ -135,7 +136,8 @@ if st.button("Run Pricing Model"):
 
     p.legend.location = "top_left"
 
-    st.bokeh_chart(p, use_container_width=True)
+    # ✅ UPDATED: correct Bokeh rendering
+    streamlit_bokeh(p, use_container_width=True)
 
     # -------------------------------
     # Insights
