@@ -77,7 +77,6 @@ def dynamic_pricing_pipeline(df):
 if st.button("Run Pricing Model"):
     with st.spinner("Calculating prices..."):
         df_result = dynamic_pricing_pipeline(df.copy())
-
     st.success("Pricing model executed successfully")
 
     # -------------------------------
@@ -108,25 +107,27 @@ if st.button("Run Pricing Model"):
         x_axis_label="Parking Lot Index",
         y_axis_label="Price",
         height=400,
-        width=900
+        width=700
     )
 
+    x = list(range(len(df_result)))  # numeric x-axis
+
     p.line(
-        df_result.index,
+        x,
         df_result["linear_price"],
         legend_label="Linear Price",
         line_width=2,
         color="blue"
     )
     p.line(
-        df_result.index,
+        x,
         df_result["dynamic_price"],
         legend_label="Dynamic Price",
         line_width=2,
         color="green"
     )
     p.line(
-        df_result.index,
+        x,
         df_result["competitive_price"],
         legend_label="Competitive Price",
         line_width=2,
@@ -138,21 +139,10 @@ if st.button("Run Pricing Model"):
     st.bokeh_chart(p, use_container_width=True)
 
     # -------------------------------
-    # Insights
+    # Key Insights
     # -------------------------------
     st.subheader("🔍 Key Insights")
-
     col1, col2, col3 = st.columns(3)
-
-    col1.metric(
-        "Avg Linear Price",
-        f"{df_result['linear_price'].mean():.2f}"
-    )
-    col2.metric(
-        "Avg Dynamic Price",
-        f"{df_result['dynamic_price'].mean():.2f}"
-    )
-    col3.metric(
-        "Avg Competitive Price",
-        f"{df_result['competitive_price'].mean():.2f}"
-    )
+    col1.metric("Avg Linear Price", f"{df_result['linear_price'].mean():.2f}")
+    col2.metric("Avg Dynamic Price", f"{df_result['dynamic_price'].mean():.2f}")
+    col3.metric("Avg Competitive Price", f"{df_result['competitive_price'].mean():.2f}")
