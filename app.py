@@ -39,6 +39,7 @@ if uploaded_file is not None:
 else:
     st.info("Using default dataset bundled with the app")
     df = pd.read_csv("dataset.csv")
+df = pd.read_csv("./dataset.csv")
 
 # -------------------------------
 # Pricing pipeline (REUSED LOGIC)
