@@ -38,11 +38,10 @@ if uploaded_file is not None:
     st.success("Dataset uploaded successfully")
 else:
     st.info("Using default dataset bundled with the app")
-    df = pd.read_csv("dataset.csv")
-df = pd.read_csv("./dataset.csv")
+    df = pd.read_csv("./dataset.csv")  # relative path only
 
 # -------------------------------
-# Pricing pipeline (REUSED LOGIC)
+# Pricing pipeline
 # -------------------------------
 def dynamic_pricing_pipeline(df):
     base_price = 10.0
