@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from bokeh.plotting import figure
-from streamlit_bokeh import streamlit_bokeh
 
 # -------------------------------
 # Page config
@@ -39,7 +38,7 @@ if uploaded_file is not None:
     st.success("Dataset uploaded successfully")
 else:
     st.info("Using default dataset bundled with the app")
-    df = pd.read_csv("./dataset.csv")  # relative path only
+    df = pd.read_csv("dataset.csv")
 
 # -------------------------------
 # Pricing pipeline
@@ -136,8 +135,7 @@ if st.button("Run Pricing Model"):
 
     p.legend.location = "top_left"
 
-    # ✅ UPDATED: correct Bokeh rendering
-    streamlit_bokeh(p, use_container_width=True)
+    st.bokeh_chart(p, use_container_width=True)
 
     # -------------------------------
     # Insights
