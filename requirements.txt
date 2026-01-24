@@ -1,8 +1,8 @@
-streamlit==1.26.0
+streamlit
 bokeh==2.4.3
-pandas==2.1.0
-panel==1.2.0
-pathway==0.4.2
-numpy==1.25.2
-matplotlib==3.8.0
-faker==18.9.0
+pandas
+panel
+pathway
+numpy
+matplotlib
+faker
