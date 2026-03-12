@@ -4,3 +4,4 @@ bokeh==2.4.3
 numpy<2.0
 pathway
 folium
+streamlit-folium
