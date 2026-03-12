@@ -1,4 +1,12 @@
-# 🚗 Dynamic Parking Pricing System – End-to-End Data Science & Deployment Project
+# Smart City Dynamic Parking Pricing System
+
+An end-to-end **data analytics project** that demonstrates how urban parking systems can use **dynamic pricing and demand analytics** to optimize revenue and manage parking demand.
+
+This project simulates real-world parking demand and applies **data-driven pricing strategies** based on occupancy, traffic conditions, and queue length.
+
+A live analytics dashboard allows users to explore pricing trends, revenue impact, and spatial demand patterns across parking locations.
+
+---
 
 ## 📌 Project Summary
 
@@ -14,8 +22,9 @@ The system dynamically adjusts parking prices based on:
 The solution is delivered as an **interactive Streamlit web application**, containerized using **Docker**, and deployed on **free cloud platforms**.
 
 This project demonstrates **end-to-end engineering**:
+```
 data ingestion → pricing logic → visualization → containerization → public deployment.
-
+```
 ---
 
 ## 🎯 Problem Statement
@@ -67,6 +76,48 @@ dynamic-pricing-parking_part2/
 ```
 
 ---
+## Key Features
+
+Dynamic Pricing Model  
+A pricing algorithm adjusts parking prices based on occupancy, traffic conditions, and queue length.
+
+Revenue Analytics  
+Estimates total revenue under dynamic pricing scenarios.
+
+Interactive Dashboard  
+Built using Streamlit for real-time analytics and visualization.
+
+Geospatial Demand Analysis  
+Parking locations and demand intensity are visualized on an interactive city map.
+
+Demand Heatmap  
+Shows areas with high parking demand using spatial heatmaps.
+
+Real-Time Simulation  
+Optional demand simulation dynamically updates parking occupancy and pricing.
+
+---
+## 🏗 System Architecture
+The project simulates a real-world analytics pipeline used in smart city infrastructure systems.
+```
+Parking Dataset
+      │
+      ▼
+Data Pipeline
+(Data Cleaning + Feature Engineering)
+      │
+      ▼
+Dynamic Pricing Model
+      │
+      ▼
+Revenue & Demand Analytics
+      │
+      ▼
+Interactive Dashboard (Streamlit)
+      │
+      ▼
+Geospatial Visualization (Folium Maps)
+```
 
 ## 📁 File-by-File Explanation
 
@@ -105,8 +156,6 @@ Main **Streamlit application file**.
 5. Output table
 6. Visualization
 7. Key metrics
-
-This file contains the **business logic + UI layer**.
 
 ---
 
@@ -158,70 +207,10 @@ A line chart comparing:
 Used to visually analyze pricing behavior across parking lots.
 
 ---
+## Dashboard Preview
+<img width="1429" height="641" alt="Screenshot 2026-03-12 103116" src="https://github.com/user-attachments/assets/75f1c003-f51a-4cec-a562-4d27fb160d88" />
+<img width="1448" height="646" alt="Screenshot 2026-03-12 103105" src="https://github.com/user-attachments/assets/5a2d3f30-29e2-4ace-b567-62fef6bdb36c" />
 
-### 5️⃣ `requirements.txt`
-
-Defines Python dependencies required to run the project.
-
-Example:
-
-```
-streamlit==1.29.0
-pandas
-numpy==1.26.4
-bokeh==2.4.3
-```
-
-Pinned versions ensure compatibility across environments.
-
----
-
-### 6️⃣ `runtime.txt`
-
-Specifies Python version for Streamlit Cloud.
-
-```
-python-3.10
-```
-
-Prevents incompatibility with newer Python releases.
-
----
-
-### 7️⃣ `Dockerfile`
-
-Defines the container image for the application.
-
-```dockerfile
-FROM python:3.10-slim
-WORKDIR /app
-COPY . .
-RUN pip install --no-cache-dir -r requirements.txt
-EXPOSE 8501
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
-```
-
-Ensures:
-
-* Reproducibility
-* Dependency isolation
-* Cloud portability
-
----
-
-### 8️⃣ `.dockerignore`
-
-Prevents unnecessary files from being included in the Docker image.
-
-Example:
-
-```
-__pycache__/
-.git/
-.env
-```
-
----
 
 ## ▶️ Run Locally (Without Docker)
 
@@ -265,20 +254,11 @@ docker run -p 8501:8501 parking-pricing-app
 
 ---
 
-## 🚀 Final Deployment: Hugging Face Spaces (Docker)
-
-**Why Hugging Face Spaces**
-
-* Free
-* Public URL
-* Docker support
-* No dependency conflicts
-
-**Deployment Type**
-
-```
-Hugging Face Spaces → Docker → Streamlit
-```
+## ☁️ Deployment
+The application can be deployed using:
+- Streamlit Community Cloud
+- Hugging Face Spaces (Docker)
+Both provide public URLs for accessing the dashboard without local installation.
 
 **Push Code**
 
@@ -300,33 +280,37 @@ Authentication uses Hugging Face access token.
 * Public access available
 * Dockerized and reproducible
 
-Deployment is **COMPLETE**.
 
 ---
 
-## 📈 Resume Value
+## 📈 Project Value
+This project demonstrates multiple industry-relevant skills:
+- Data pipeline development
+-  Demand-driven pricing analytics
+- Interactive dashboard creation
+- Geospatial data visualization
+- Cloud deployment and containerization
 
-* End-to-end project ownership
-* Real-world pricing logic
-* Cloud deployment experience
-* Docker and debugging skills
-
+It represents an end-to-end data analytics system, from raw data processing to public dashboard deployment.
 ---
 
 ## 🔮 Future Enhancements
-
-* Replace Bokeh with Plotly
-* Real-time streaming integration
-* ML-based optimization
-* User authentication
-* Kubernetes deployment
+Possible extensions include:
+• Machine learning based demand forecasting
+• Real-time parking sensor data integration
+• Dynamic pricing optimization using reinforcement learning
+• City-wide parking demand simulation
+• Multi-city deployment
 
 ---
 
-## 🏁 Conclusion
+## 👩‍💻 Author
 
-This project reflects real-world data engineering and deployment challenges.
+Bindu Sri Majji
+Final Year Computer Science Student
 
-> *"If it runs in the cloud, the project is complete."*
+Interested in:
 
-**A full-stack data science deployment project.**
+• Data Analytics
+• Data Science
+• Data Engineering
