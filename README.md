@@ -7,6 +7,8 @@ This project simulates real-world parking demand and applies **data-driven prici
 A live analytics dashboard allows users to explore pricing trends, revenue impact, and spatial demand patterns across parking locations.
 
 ---
+## Live Demo
+[https://dynamic-pricing-parkingpart2-od6quqdnfpvbspqcioxmwt.streamlit.app/]
 
 ## 📌 Project Summary
 
