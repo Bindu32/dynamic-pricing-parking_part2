@@ -3,98 +3,307 @@ import pandas as pd
 import numpy as np
 import time
 from bokeh.plotting import figure
+import folium
+from folium.plugins import HeatMap
+from streamlit_folium import st_folium
 
-st.set_page_config(page_title="Real-Time Parking Pricing", layout="wide")
+# ---------------------------------------
+# Page configuration
+# ---------------------------------------
 
-st.title("🚗 Real-Time Dynamic Parking Pricing")
-
-st.markdown(
-"""
-This dashboard simulates **real-time parking demand and dynamic pricing**.
-Prices adjust automatically based on occupancy, traffic and queue length.
-"""
+st.set_page_config(
+    page_title="Smart City Parking Pricing",
+    layout="wide"
 )
 
-# -----------------------
-# Load dataset
-# -----------------------
-df = pd.read_csv("dataset.csv")
+st.title("🚗 Smart City Dynamic Parking Pricing System")
 
-# -----------------------
+st.markdown("""
+This dashboard demonstrates **dynamic pricing optimization for urban parking systems**.
+
+Prices adjust based on:
+
+• Parking occupancy  
+• Traffic conditions  
+• Queue length  
+• Competitor pricing  
+
+The goal is to **optimize parking revenue and manage demand efficiently**.
+""")
+
+# ---------------------------------------
+# Sidebar
+# ---------------------------------------
+
+st.sidebar.header("Controls")
+
+uploaded_file = st.sidebar.file_uploader(
+    "Upload parking dataset (CSV)",
+    type=["csv"]
+)
+
+simulate = st.sidebar.checkbox(
+    "Enable Real-Time Demand Simulation"
+)
+
+# ---------------------------------------
+# Load dataset
+# ---------------------------------------
+
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+else:
+    df = pd.read_csv("dataset.csv")
+
+# ---------------------------------------
+# Generate coordinates if not present
+# ---------------------------------------
+
+if "latitude" not in df.columns:
+
+    np.random.seed(42)
+
+    city_lat = 17.3850
+    city_lon = 78.4867
+
+    df["latitude"] = city_lat + np.random.normal(0, 0.01, len(df))
+    df["longitude"] = city_lon + np.random.normal(0, 0.01, len(df))
+
+# ---------------------------------------
 # Pricing model
-# -----------------------
+# ---------------------------------------
+
 def dynamic_pricing(df):
 
     base_price = 10
 
     df["occupancy_rate"] = df["Occupancy"] / df["Capacity"]
 
-    traffic_map = {"low":1,"medium":1.5,"high":2}
-    df["traffic_weight"] = df["TrafficConditionNearby"].map(traffic_map).fillna(1)
+    traffic_map = {
+        "low": 1,
+        "medium": 1.5,
+        "high": 2
+    }
+
+    df["traffic_weight"] = df["TrafficConditionNearby"].map(
+        traffic_map
+    ).fillna(1)
 
     df["dynamic_price"] = (
         base_price
-        * (1 + 1.5*df["occupancy_rate"])
-        * (1 + 0.2*df["traffic_weight"])
-        * (1 + 0.1*df["QueueLength"])
+        * (1 + 1.5 * df["occupancy_rate"])
+        * (1 + 0.2 * df["traffic_weight"])
+        * (1 + 0.1 * df["QueueLength"])
     )
 
     return df
 
-# -----------------------
-# Real-time simulation
-# -----------------------
-placeholder = st.empty()
 
-for step in range(50):
+# ---------------------------------------
+# Real-time demand simulation
+# ---------------------------------------
 
-    # simulate new demand
-    df["Occupancy"] = df["Occupancy"] + np.random.randint(-2,5,len(df))
+if simulate:
 
-    df["Occupancy"] = df["Occupancy"].clip(0,df["Capacity"])
+    df["Occupancy"] = df["Occupancy"] + np.random.randint(-2, 5, len(df))
 
-    df["QueueLength"] = np.random.randint(0,5,len(df))
+    df["Occupancy"] = df["Occupancy"].clip(0, df["Capacity"])
 
-    df = dynamic_pricing(df)
+    df["QueueLength"] = np.random.randint(0, 5, len(df))
 
-    with placeholder.container():
+# ---------------------------------------
+# Run pricing model
+# ---------------------------------------
 
-        st.subheader("Live Parking Metrics")
+df_result = dynamic_pricing(df.copy())
 
-        col1,col2,col3 = st.columns(3)
+# ---------------------------------------
+# KPI Metrics
+# ---------------------------------------
 
-        col1.metric("Avg Occupancy",
-                    f"{df['occupancy_rate'].mean():.2f}")
+st.subheader("📊 Pricing KPIs")
 
-        col2.metric("Avg Price",
-                    f"${df['dynamic_price'].mean():.2f}")
+col1, col2, col3 = st.columns(3)
 
-        revenue = (df["dynamic_price"]*df["Occupancy"]).sum()
+col1.metric(
+    "Average Occupancy",
+    f"{df_result['occupancy_rate'].mean():.2f}"
+)
 
-        col3.metric("Estimated Revenue",
-                    f"${revenue:,.0f}")
+col2.metric(
+    "Average Dynamic Price",
+    f"${df_result['dynamic_price'].mean():.2f}"
+)
 
-        # price chart
-        p = figure(
-            title="Live Pricing",
-            x_axis_label="Parking Lot",
-            y_axis_label="Price",
-            height=400
-        )
+estimated_revenue = (
+    df_result["dynamic_price"] * df_result["Occupancy"]
+).sum()
 
-        x = list(range(len(df)))
+col3.metric(
+    "Estimated Revenue",
+    f"${estimated_revenue:,.0f}"
+)
 
-        p.line(x, df["dynamic_price"], line_width=2)
+# ---------------------------------------
+# Pricing comparison chart
+# ---------------------------------------
 
-        st.bokeh_chart(p, use_container_width=True)
+st.subheader("📈 Pricing Distribution")
 
-        st.dataframe(
-            df[[
-                "SystemCodeNumber",
-                "Occupancy",
-                "Capacity",
-                "dynamic_price"
-            ]].head(10)
-        )
+p = figure(
+    title="Dynamic Pricing Across Parking Lots",
+    x_axis_label="Parking Lot Index",
+    y_axis_label="Price",
+    height=400
+)
 
-    time.sleep(3)
+x = list(range(len(df_result)))
+
+p.line(
+    x,
+    df_result["dynamic_price"],
+    line_width=2
+)
+
+st.bokeh_chart(p, use_container_width=True)
+
+# ---------------------------------------
+# Occupancy vs price analysis
+# ---------------------------------------
+
+st.subheader("📊 Occupancy Impact on Price")
+
+p2 = figure(
+    title="Occupancy Rate vs Dynamic Price",
+    x_axis_label="Occupancy Rate",
+    y_axis_label="Dynamic Price",
+    height=400
+)
+
+p2.circle(
+    df_result["occupancy_rate"],
+    df_result["dynamic_price"],
+    size=8
+)
+
+st.bokeh_chart(p2, use_container_width=True)
+
+# ---------------------------------------
+# Top revenue parking lots
+# ---------------------------------------
+
+st.subheader("🏆 Highest Revenue Parking Lots")
+
+df_result["revenue"] = (
+    df_result["dynamic_price"] * df_result["Occupancy"]
+)
+
+top_lots = df_result.sort_values(
+    "revenue",
+    ascending=False
+).head(10)
+
+st.dataframe(
+    top_lots[
+        [
+            "SystemCodeNumber",
+            "Occupancy",
+            "Capacity",
+            "dynamic_price",
+            "revenue"
+        ]
+    ],
+    use_container_width=True
+)
+
+# ---------------------------------------
+# Parking Map
+# ---------------------------------------
+
+st.subheader("🗺 Parking Locations")
+
+m = folium.Map(
+    location=[
+        df_result["latitude"].mean(),
+        df_result["longitude"].mean()
+    ],
+    zoom_start=13
+)
+
+for _, row in df_result.iterrows():
+
+    popup_text = f"""
+    Parking Lot: {row['SystemCodeNumber']} <br>
+    Occupancy: {row['Occupancy']}/{row['Capacity']} <br>
+    Price: ${row['dynamic_price']:.2f}
+    """
+
+    folium.CircleMarker(
+        location=[row["latitude"], row["longitude"]],
+        radius=6,
+        popup=popup_text,
+        color="blue",
+        fill=True
+    ).add_to(m)
+
+st_folium(m, width=900, height=500)
+
+# ---------------------------------------
+# Demand Heatmap
+# ---------------------------------------
+
+st.subheader("🔥 Parking Demand Heatmap")
+
+heat_data = [
+    [
+        row["latitude"],
+        row["longitude"],
+        row["occupancy_rate"]
+    ]
+    for _, row in df_result.iterrows()
+]
+
+m2 = folium.Map(
+    location=[
+        df_result["latitude"].mean(),
+        df_result["longitude"].mean()
+    ],
+    zoom_start=13
+)
+
+HeatMap(heat_data).add_to(m2)
+
+st_folium(m2, width=900, height=500)
+
+# ---------------------------------------
+# Dataset preview
+# ---------------------------------------
+
+st.subheader("📂 Dataset Preview")
+
+st.dataframe(
+    df_result.head(50),
+    use_container_width=True
+)
+
+# ---------------------------------------
+# Model explanation
+# ---------------------------------------
+
+st.subheader("⚙️ Pricing Model Logic")
+
+st.markdown("""
+Dynamic price is calculated using demand signals:
+
+Dynamic Price =  
+Base Price × Occupancy Impact × Traffic Factor × Queue Impact
+
+Drivers:
+
+• High occupancy increases price  
+• Heavy traffic increases demand  
+• Long queues signal higher demand  
+• Pricing adapts dynamically to parking utilization  
+
+This simulation demonstrates **data-driven pricing strategies for smart city parking systems**.
+""")
