@@ -162,7 +162,7 @@ st.plotly_chart(fig, use_container_width=True)
 # Occupancy vs price analysis
 # ---------------------------------------
 
-sst.subheader("📊 Occupancy Impact on Price")
+st.subheader("📊 Occupancy Impact on Price")
 
 fig2 = px.scatter(
     df_result,
@@ -292,4 +292,5 @@ Drivers:
 
 This simulation demonstrates **data-driven pricing strategies for smart city parking systems**.
 """)
+
 
