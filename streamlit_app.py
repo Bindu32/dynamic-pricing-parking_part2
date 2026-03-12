@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import time
-from bokeh.plotting import figure
+import plotly.express as px
 import folium
 from folium.plugins import HeatMap
 from streamlit_folium import st_folium
@@ -150,43 +150,28 @@ col3.metric(
 
 st.subheader("📈 Pricing Distribution")
 
-p = figure(
-    title="Dynamic Pricing Across Parking Lots",
-    x_axis_label="Parking Lot Index",
-    y_axis_label="Price",
-    height=400
+fig = px.line(
+    df_result,
+    y="dynamic_price",
+    title="Dynamic Pricing Across Parking Lots"
 )
 
-x = list(range(len(df_result)))
-
-p.line(
-    x,
-    df_result["dynamic_price"],
-    line_width=2
-)
-
-st.bokeh_chart(p, use_container_width=True)
+st.plotly_chart(fig, use_container_width=True)
 
 # ---------------------------------------
 # Occupancy vs price analysis
 # ---------------------------------------
 
-st.subheader("📊 Occupancy Impact on Price")
+sst.subheader("📊 Occupancy Impact on Price")
 
-p2 = figure(
-    title="Occupancy Rate vs Dynamic Price",
-    x_axis_label="Occupancy Rate",
-    y_axis_label="Dynamic Price",
-    height=400
+fig2 = px.scatter(
+    df_result,
+    x="occupancy_rate",
+    y="dynamic_price",
+    title="Occupancy Rate vs Dynamic Price"
 )
 
-p2.circle(
-    df_result["occupancy_rate"],
-    df_result["dynamic_price"],
-    size=8
-)
-
-st.bokeh_chart(p2, use_container_width=True)
+st.plotly_chart(fig2, use_container_width=True)
 
 # ---------------------------------------
 # Top revenue parking lots
@@ -230,7 +215,7 @@ m = folium.Map(
     zoom_start=13
 )
 
-for _, row in df_result.iterrows():
+for _, row in df_result.head(200).iterrows():
 
     popup_text = f"""
     Parking Lot: {row['SystemCodeNumber']} <br>
@@ -307,3 +292,4 @@ Drivers:
 
 This simulation demonstrates **data-driven pricing strategies for smart city parking systems**.
 """)
+
