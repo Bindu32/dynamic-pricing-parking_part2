@@ -296,21 +296,21 @@ It represents an end-to-end data analytics system, from raw data processing to p
 
 ## 🔮 Future Enhancements
 Possible extensions include:
-• Machine learning based demand forecasting
-• Real-time parking sensor data integration
-• Dynamic pricing optimization using reinforcement learning
-• City-wide parking demand simulation
-• Multi-city deployment
+- Machine learning based demand forecasting
+- Real-time parking sensor data integration
+- Dynamic pricing optimization using reinforcement learning
+- City-wide parking demand simulation
+- Multi-city deployment
 
 ---
 
 ## 👩‍💻 Author
 
-Bindu Sri Majji
-Final Year Computer Science Student
+- Bindu Sri Majji
+- Final Year Computer Science Student
 
 Interested in:
 
-• Data Analytics
-• Data Science
-• Data Engineering
+- Data Analytics
+- Data Science
+
