@@ -266,12 +266,7 @@ st.subheader("⚙️ Pricing Model Logic")
 st.markdown("""
 Dynamic pricing is calculated using multiple real-world demand signals.
 
-Dynamic Price =
-
-Base Price  
-× Occupancy Impact  
-× Traffic Factor  
-× Queue Impact
+Dynamic Price = Base Price  × Occupancy Impact  × Traffic Factor  × Queue Impact
 
 Key Drivers:
 
@@ -283,3 +278,4 @@ Key Drivers:
 This simulation demonstrates how **smart city parking systems can use
 data-driven pricing strategies to optimize revenue and demand allocation.**
 """)
+
