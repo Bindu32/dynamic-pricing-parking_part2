@@ -6,3 +6,4 @@ pathway
 folium
 streamlit-folium
 plotly
+scipy
